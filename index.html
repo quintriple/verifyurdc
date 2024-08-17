@@ -1,181 +1,172 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Verification</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Additional CSS for ASCII art and boxes */
-        .ascii-art-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            height: 100%; /* Full height to center vertically */
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Discord Verification</title><link rel="stylesheet" href="styles.css"><style>/* Import Google Font */@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .ascii-art {
-            font-family: monospace;
-            white-space: pre; /* Preserve whitespace for ASCII art */
-            color: #fff; /* Match the text color */
-            margin: 0 20px; /* Space between ASCII art and boxes */
-        }
-
-        .info-boxes {
-            display: flex;
-            width: 100%;
-            max-width: 800px; /* Limit the width of the boxes */
-            justify-content: space-between; /* Space out the boxes */
-        }
-
-        .info-box {
-            background-color: #444; /* Darker background for the boxes */
-            border-radius: 8px;
-            padding: 20px;
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
             color: #fff;
-            width: 45%; /* Adjust width to fit within the container */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Optional shadow */
-        }
-
-        .info-box h3 {
-            margin-bottom: 10px;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        .info-box p {
-            font-size: 1em;
-        }
-
-        .info-box.right-box {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-
-        /* Navigation bar styling */
-        nav {
-            background-color: #333; /* Dark background for the nav bar */
-            padding: 10px 20px; /* Spacing around the nav bar */
+            background-color: #333;
             display: flex;
-            justify-content: space-between; /* Space between items */
-            align-items: center; /* Center items vertically */
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000; /* Ensure it is above other content */
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        nav .nav-item {
-            margin: 0 10px; /* Space between nav items */
-        }
-
-        /* QR Code container */
-        #qrcode {
-            margin-top: 20px;
+        header {
+            background-color: #444;
+            padding: 10px20px;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1000;
+        }
+
+        headerbutton {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 12px24px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 05px;
+        }
+
+        headerbutton:hover {
+            background-color: #333;
+            transform: scale(1.05);
+        }
+
+        headerbutton:active {
+            background-color: #000;
+            transform: scale(1);
+        }
+
+        headerbutton:focus {
+            outline: none;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <div class="nav-item">
-            <button class="qr-code-btn" aria-label="Generate QR Code" onclick="promptPassword()">QR Code</button>
-        </div>
-        <div class="nav-item">
-            <button aria-label="Verify Discord account" onclick="verifyDiscord()">Verify Discord Account</button>
-        </div>
-        <div class="nav-item">
-            <button class="top-left-btn" aria-label="Add Discord bot" onclick="addDiscordBot()">Add Bot</button>
-        </div>
-    </nav>
-
-    <div class="content">
-        <div class="ascii-art-container">
-            <div class="info-box">
-                <h3>Add our bot to your server</h3>
-                <p>The most secure verify bot out there.</p>
-            </div>
-            <div class="ascii-art">
-                /\_/\  <br>
-               ( o.o ) <br>
-                > ^ < <br>
-            </div>
-            <div class="info-box right-box">
-                <h3>Who made it?</h3>
-                <p>.yvng__ on Discord</p>
-            </div>
-        </div>
-
-        <!-- Hidden input field for admin command -->
-        <input type="text" id="adminCommand" class="hidden" placeholder="Type 'admin' to access">
-
-        <div id="adminSection" class="hidden" aria-hidden="true">
-            <h2>Admin Panel</h2>
-            <button aria-label="Generate QR Code" onclick="generateQRCode()">Generate QR Code</button>
-            <div id="qrcode"></div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add event listener to check for the admin command
-            document.getElementById('adminCommand').addEventListener('input', function(e) {
-                if (e.target.value.trim().toLowerCase() === 'admin') {
-                    document.getElementById('adminSection').classList.remove('hidden');
-                    e.target.value = ''; // Clear the input field
-                }
-            });
-
-            // Automatically focus on the hidden input field when the page loads
-            document.getElementById('adminCommand').focus();
-        });
-
-        function verifyDiscord() {
-            document.getElementById('verifySection').classList.remove('hidden');
-            // URL of the frog image
-            const frogImageUrl = 'https://example.com/path/to/frog-image.jpg'; // Replace with the actual URL
-            // Create a temporary link element
-            const link = document.createElement('a');
-            link.href = frogImageUrl;
-            link.download = 'frog-image.jpg'; // Set the download filename
-            document.body.appendChild(link);
-            link.click(); // Trigger the download
-            document.body.removeChild(link); // Clean up
+            text-align: center;
+            flex: 1;
+            padding: 20px;
         }
 
-        function generateQRCode() {
+        .central-message {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.5em;
+            color: #fff;
+            margin: 20px0;
+        }
+
+        .verification-section,
+        .qr-code-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .verification-sectioninput {
+            padding: 10px;
+            border: 1px solid #fff;
+            border-radius: 6px;
+            background-color: #444;
+            color: #fff;
+            margin: 10px0;
+        }
+
+        .verification-sectionbutton {
+            background-color: #000;
+            color: #fff;
+            padding: 10px20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .verification-sectionbutton:hover {
+            background-color: #333;
+        }
+
+        .verification-sectionbutton:active {
+            background-color: #000;
+        }
+
+        .qr-code-sectionimg {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .footer {
+            background-color: #444;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footera {
+            color: #fff;
+            text-decoration: none;
+            margin: 010px;
+        }
+
+        .footera:hover {
+            text-decoration: underline;
+        }
+    </style></head><body><header><button class="qr-code-btn" aria-label="Generate QR Code" onclick="showQRCode()">QR Code</button><button aria-label="Verify Discord account" onclick="showVerificationSection()">Verify Discord Account</button><button class="top-left-btn" aria-label="Add Discord bot" onclick="addDiscordBot()">Add Bot</button></header><div class="content"><div class="central-message">
+            The most secure Discord verification bot.
+        </div><!-- Verification Section --><div class="verification-section" id="verificationSection"><input type="text" id="discordUsername" placeholder="Enter your Discord username"><button onclick="verifyDiscord()">Submit</button><p id="verificationMessage"></p></div><!-- QR Code Section --><div class="qr-code-section" id="qrCodeSection"><p>Here is your QR Code:</p><div id="qrcode"></div></div></div><footer class="footer">
+        © Yvng Solutions | <ahref="#">About</a> | <ahref="#">FAQ</a> | <ahref="#">Wiki</a> | <ahref="#">Inc.</a> | <ahref="#">Donate</a> | <ahref="https://discord.com/oauth2/authorize?client_id=1274129476665606178&permissions=8&scope=bot"target="_blank">Get an Invite</a></footer><script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script><script>functionshowVerificationSection() {
+            document.getElementById('verificationSection').style.display = 'flex';
+            document.getElementById('qrCodeSection').style.display = 'none';
+        }
+
+        functionverifyDiscord() {
+            const username = document.getElementById('discordUsername').value.trim();
+            if (username) {
+                document.getElementById('verificationMessage').textContent = 'You\'re all set!';
+                document.getElementById('verificationSection').style.display = 'none';
+            } else {
+                alert('Please enter your Discord username.');
+            }
+        }
+
+        functionshowQRCode() {
+            document.getElementById('qrCodeSection').style.display = 'flex';
+            document.getElementById('verificationSection').style.display = 'none';
             QRCode.toDataURL(window.location.href, function (err, url) {
                 if (err) {
                     alert('Failed to generate QR Code.');
                     return;
                 }
-                let img = document.createElement('img');
+                const img = document.createElement('img');
                 img.src = url;
-                document.getElementById('qrcode').innerHTML = '';
-                document.getElementById('qrcode').appendChild(img);
-                alert('QR Code Generated! Share this in the Discord server.');
+                const qrcodeContainer = document.getElementById('qrcode');
+                qrcodeContainer.innerHTML = ''; // Clear previous QR codes
+                qrcodeContainer.appendChild(img);
             });
         }
 
-        function addDiscordBot() {
-            // Redirect to the Discord bot invite URL
+        functionaddDiscordBot() {
             const botInviteUrl = 'https://discord.com/oauth2/authorize?client_id=1274129476665606178&permissions=8&integration_type=0&scope=bot';
             window.open(botInviteUrl, '_blank');
         }
-
-        function promptPassword() {
-            const password = prompt('Please enter the password:');
-            if (password === 'CumSock') {
-                generateQRCode(); // Generate QR Code if the password is correct
-            } else {
-                alert('Incorrect password.');
-            }
-        }
-    </script>
-</body>
-</html>
+    </script></body></html>
